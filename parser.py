@@ -22,20 +22,15 @@ def p_statement(p):
     """statement : assignment
                  | comparison
                  | expression
+                 | keyword
                  | print_statement
-                 | if_statement
-                 | if_body"""
+                 | if_statement"""
     p[0] = p[1]
 
 
 def p_if_statement(p):
-    """if_statement : keyword if_body"""
-    p[0] = ('if', p[2], p[3])
-
-
-def p_if_body(p):
-    """if_body : expression expression"""
-    p[0] = (p[2], p[3])
+    """if_statement : statement expression """
+    p[0] = ('if', p[2])
 
 
 def p_assignment(p):
@@ -91,7 +86,6 @@ symbol_table = {}
 # Define a function for semantic analysis
 def semantic_analysis(parsed_code):
     for statement in parsed_code:
-        print("0 = ", statement[0], ", 1 = ", statement[1], ", 2 = ", statement[2])
         if statement[0] == 'assignment':
             variable_name = statement[1]
             expression = statement[2]
@@ -130,8 +124,9 @@ def semantic_analysis(parsed_code):
                     print("Semantic Error: Print statement requires compatible types.")
                     return False
         elif statement[0] == 'if':
-            condition = statement[1]
-            body = statement[2]
+            print(statement)
+            condition = statement[1][0]
+            body = statement[1]
             # Ensure condition expression is of type bool
             if not isinstance(condition, bool):
                 print("Semantic Error: 'if' statement condition must evaluate to a boolean value.")

@@ -1,10 +1,12 @@
 from Lexer import tokenize
 from parser import parse
-from code_gen import generate
+
 
 if __name__ == "__main__":
     code = """
-      IF 5 < 6
+      if (1 < 2){
+        print("ahh");
+        }
     """
     if code.strip():
         tokens = tokenize(code)

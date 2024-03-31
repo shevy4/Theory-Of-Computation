@@ -29,8 +29,13 @@ def p_statement(p):
 
 
 def p_if_statement(p):
-    """if_statement : statement expression """
-    p[0] = ('if', p[2])
+    """
+    if_statement : keyword expression keyword colon statement_list
+    """
+    for _ in p:
+        print(_)
+    print("DONE")
+    p[0] = ('if', p[2], p[5])
 
 
 def p_assignment(p):
@@ -60,7 +65,7 @@ def p_expression(p):
 
 
 def p_print_statement(p):
-    """print_statement : print expression_list"""
+    """print_statement : keyword expression"""
     p[0] = ('print', p[2])
 
 
@@ -116,19 +121,23 @@ def semantic_analysis(parsed_code):
             # Perform type checking for print statements
             for expression in statement[1]:
                 if isinstance(expression, str):
+                    if isinstance(statement[1], str):
+                        return True
                     # Check if identifier exists in symbol table
-                    if expression not in symbol_table:
+                    elif expression not in symbol_table:
                         print(f"Semantic Error: Identifier '{expression}' not declared.")
                         return False
                 elif not isinstance(expression, (int, str)):
                     print("Semantic Error: Print statement requires compatible types.")
                     return False
+
         elif statement[0] == 'if':
-            print(statement)
             condition = statement[1][0]
-            body = statement[1]
+            body = statement[1][0]
+            if bool(body):
+                return True
             # Ensure condition expression is of type bool
-            if not isinstance(condition, bool):
+            elif not isinstance(condition, bool):
                 print("Semantic Error: 'if' statement condition must evaluate to a boolean value.")
                 return False
             # Perform semantic analysis on the body of the if statement

@@ -77,3 +77,15 @@ def tokenize(code):
     for token in lexer:
         tokens.append((token.type, token.value))
     return tokens
+
+if __name__ == "__main__":
+    code = """
+      if 1 < 2 then:
+      print("Hello")
+else:
+print("World")
+    """
+
+    if code.strip():
+        tokens = tokenize(code)
+        print("Tokens:", tokens)

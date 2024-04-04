@@ -30,12 +30,14 @@ def p_statement(p):
 
 def p_if_statement(p):
     """
-    if_statement : keyword expression keyword colon statement_list
+    if_statement : if expression keyword colon statement
+                 | if expression keyword colon statement else colon statement
     """
-    for _ in p:
-        print(_)
-    print("DONE")
+    temp = p
     p[0] = ('if', p[2], p[5])
+
+    if len(temp) > 6:
+        p[0] = ('if', p[2], p[5]), ('else', p[8])
 
 
 def p_assignment(p):

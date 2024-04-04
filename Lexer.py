@@ -14,6 +14,7 @@ tokens = (
     'colon',
     'then',
     'else',
+    'if',
     'keyword',
     'equals',
     'double_equals',
@@ -49,11 +50,19 @@ def t_string(t):
     return t
 
 
-
 def t_keyword(t):
-    r'\b(if|then|else|print|:)\b'
+    r'\b(then|print)\b'
     return t
 
+
+def t_if(t):
+    r'\b(if)\b'
+    return t
+
+
+def t_else(t):
+    r'\b(else)\b'
+    return t
 
 
 def t_identifier(t):

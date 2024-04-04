@@ -22,22 +22,27 @@ def p_statement(p):
     """statement : assignment
                  | comparison
                  | expression
-                 | keyword
                  | print_statement
+                 | for_loop
                  | if_statement"""
     p[0] = p[1]
 
 
+def p_for_loop(p):
+    """for_loop : for expression in range lparen expression rparen colon"""
+    p[0] = ('for', (p[4], (p[2], p[6])))
+
+
 def p_if_statement(p):
     """
-    if_statement : if expression keyword colon statement
-                 | if expression keyword colon statement else colon statement
+    if_statement : if expression colon statement
+                 | if expression colon statement else colon statement
     """
     temp = p
-    p[0] = ('if', p[2], p[5])
+    p[0] = ('if', p[2], p[4])
 
-    if len(temp) > 6:
-        p[0] = ('if', p[2], p[5]), ('else', p[8])
+    if len(temp) > 5:
+        p[0] = ('if', p[2], p[4]), ('else', p[7])
 
 
 def p_assignment(p):
@@ -67,7 +72,7 @@ def p_expression(p):
 
 
 def p_print_statement(p):
-    """print_statement : keyword expression"""
+    """print_statement : print expression"""
     p[0] = ('print', p[2])
 
 
@@ -93,59 +98,78 @@ symbol_table = {}
 # Define a function for semantic analysis
 def semantic_analysis(parsed_code):
     for statement in parsed_code:
-        if statement[0] == 'assignment':
-            variable_name = statement[1]
-            expression = statement[2]
+        try:
+            # print("Statement = ", statement)
+            if statement[0] == 'assignment':
+                variable_name = statement[1]
+                expression = statement[2]
 
-            # Check if the variable is already declared
-            if variable_name in symbol_table:
-                print(f"Semantic Error: Variable '{variable_name}' redeclaration.")
-                return False
-
-            # Perform type checking for assignment
-            if isinstance(expression, tuple):
-                operator, operand1, operand2 = expression
-                if operator in ('+', '-', '*', '/'):
-                    # Type check for arithmetic operations
-                    if not (isinstance(operand1, int) and isinstance(operand2, int)):
-                        print("Semantic Error: Arithmetic operations require integer operands.")
-                        return False
-                elif operator == '=':
-                    # Type check for assignment
-                    if not isinstance(operand2, (int, str)):
-                        print("Semantic Error: Assignment requires compatible types.")
-                        return False
-
-            # Add variable to symbol table
-            symbol_table[variable_name] = None
-
-        elif statement[0] == 'print':
-            # Perform type checking for print statements
-            for expression in statement[1]:
-                if isinstance(expression, str):
-                    if isinstance(statement[1], str):
-                        return True
-                    # Check if identifier exists in symbol table
-                    elif expression not in symbol_table:
-                        print(f"Semantic Error: Identifier '{expression}' not declared.")
-                        return False
-                elif not isinstance(expression, (int, str)):
-                    print("Semantic Error: Print statement requires compatible types.")
+                # Check if the variable is already declared
+                if variable_name in symbol_table:
+                    print(f"Semantic Error: Variable '{variable_name}' redeclaration.")
                     return False
 
-        elif statement[0] == 'if':
-            condition = statement[1][0]
-            body = statement[1][0]
-            if bool(body):
-                return True
-            # Ensure condition expression is of type bool
-            elif not isinstance(condition, bool):
-                print("Semantic Error: 'if' statement condition must evaluate to a boolean value.")
-                return False
-            # Perform semantic analysis on the body of the if statement
-            if not semantic_analysis(body):
-                return False
+                # Perform type checking for assignment
+                if isinstance(expression, tuple):
+                    operator, operand1, operand2 = expression
+                    if operator in ('+', '-', '*', '/'):
+                        # Type check for arithmetic operations
+                        if not (isinstance(operand1, int) and isinstance(operand2, int)):
+                            print("Semantic Error: Arithmetic operations require integer operands.")
+                            return False
+                    elif operator == '=':
+                        # Type check for assignment
+                        if not isinstance(operand2, (int, str)):
+                            print("Semantic Error: Assignment requires compatible types.")
+                            return False
 
+                # Add variable to symbol table
+                symbol_table[variable_name] = None
+
+            elif statement[0] == 'print':
+                # Perform type checking for print statements
+                for expression in statement[1]:
+                    if statement[1][0] == '"':
+                        pass
+                        # Check if identifier exists in symbol table
+                    elif statement[1] not in symbol_table:
+                        print(f"Semantic Error: Identifier '{statement[1]}' not declared.")
+                        return False
+
+            elif statement[0] == 'if':
+                condition = statement[1]
+                body = statement[2]
+                print(condition, body)
+                if bool(body):
+                    pass
+                # Ensure condition expression is of type bool
+                elif not isinstance(condition, bool):
+                    print("Semantic Error: 'if' statement condition must evaluate to a boolean value.")
+                    return False
+                # Perform semantic analysis on the body of the if statement
+                if not semantic_analysis(body):
+                    return False
+
+            elif statement[0] == 'for':
+                if statement[1][1][1] not in symbol_table:
+                    if not isinstance(statement[1][1][1], int):
+                        print(f"Semantic Error: Range '{statement[1][1][1]}' not of type int.")
+                        return False
+
+
+            elif statement[0][0] == "if":
+                condition = statement[0][1]
+                body = statement[0][2]
+                if not bool(condition):
+                    print("Semantic Error: 'if' statement condition must evaluate to a boolean value.")
+                    return False
+
+                if not semantic_analysis(body):
+                    return False
+
+        except:
+            print("Invalid syntax")
+            return False
     return True
 
 

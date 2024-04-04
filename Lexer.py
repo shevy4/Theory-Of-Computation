@@ -12,10 +12,11 @@ tokens = (
     'rparen',
     'comma',
     'colon',
-    'then',
     'else',
     'if',
-    'keyword',
+    'in',
+    'for',
+    'range',
     'equals',
     'double_equals',
 )
@@ -23,7 +24,6 @@ tokens = (
 # Define regular expressions for lexer tokens
 t_double_equals = r'=='
 t_operator = r'[-+*/%<>&|^~]'
-t_print = r'print'
 t_lparen = r'\('
 t_rparen = r'\)'
 t_comma = r','
@@ -46,22 +46,37 @@ def t_integer(t):
 
 def t_string(t):
     r""""[^"\\]*(?:\\.[^"\\]*)*"|\'[^\'\\]*(?:\\.[^\'\\]*)*\'"""
-    t.value = t.value[1:-1]  # Remove quotes
+    # t.value = t.value[1:-1]  # Remove quotes
     return t
 
 
-def t_keyword(t):
-    r'\b(then|print)\b'
+def t_for(t):
+    r'\bfor\b'
+    return t
+
+
+def t_range(t):
+    r'\brange\b'
+    return t
+
+
+def t_in(t):
+    r'\bin\b'
     return t
 
 
 def t_if(t):
-    r'\b(if)\b'
+    r'\bif\b'
     return t
 
 
 def t_else(t):
-    r'\b(else)\b'
+    r'\belse\b'
+    return t
+
+
+def t_print(t):
+    r'\bprint\b'
     return t
 
 

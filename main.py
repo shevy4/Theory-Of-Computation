@@ -3,12 +3,9 @@ from parser import parse
 
 if __name__ == "__main__":
     code = """
-      var = 1
-      print("Starting")
-      if 1 < 2 then:
-      print("Hello")
-      else:
-      print("World")
+    for x in range(3):
+    print("test")
+      
     """
 
     if code.strip():

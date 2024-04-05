@@ -1,45 +1,27 @@
-import re
-
-# Define regular expressions
-token_patterns = [
-    (r'\b(if|else|elif|while|for|in|def|class|return|True|False|None)\b', 'KEYWORD'),
-    (r'\b(and|or|not)\b', 'LOGICAL_OPERATOR'),
-    (r'[-+]?\d*\.\d+|\d+', 'NUMBER'),  # Match floating point numbers and integers
-    (r'"[^"\\]*(?:\\.[^"\\]*)*"', 'STRING'),  # Match strings
-    (r'\'[^\'\\]*(?:\\.[^\'\\]*)*\'', 'STRING'),  # Match strings
-    (r'\b[A-Za-z_]\w*', 'IDENTIFIER'),  # Match identifiers
-    (r'[-+*/%=<>&|^~]', 'OPERATOR'),  # Match operators
-    (r'\(|\)', 'PARENTHESES'),  # Match parentheses
-    (r'\{|\}', 'BRACE'),  # Match braces
-    (r':', 'COLON'),  # Match colons
-    (r',', 'COMMA'),  # Match commas
-    (r'\s+', None)  # Match whitespace
-]
-
-
-def tokenize(code):
-    tokens = []
-    while code:
-        for pattern, token_type in token_patterns:
-            match = re.match(pattern, code)
-            if match:
-                if token_type:
-                    tokens.append((token_type, match.group(0)))
-                code = code[match.end():]
-                break
-    return tokens
-
+from Lexer import tokenize
+from optimizer import  eliminate_common_subexpressions
+from parser import parse
 
 if __name__ == "__main__":
-
     code = """
-    
-    variable1 = 1
-    variable2 = 2
-    sum = variable1 + variable2
-    print("sum = ", sum)
-    
+    b = 2
+    c = 3
+    d = 4
+    a = b + c
+    b = a - d
+    c = b + c
+    d = a - d
+      
     """
-    tokens = tokenize(code)
-    for token in tokens:
-        print(token)
+
+    if code.strip():
+        tokens = tokenize(code)
+        print("Tokens:", tokens)
+
+        parsed_code = parse(code)
+
+        if parsed_code:
+            print(parsed_code)
+            optimized_code = eliminate_common_subexpressions(parsed_code)
+            print("Optimized Code:", optimized_code)
+

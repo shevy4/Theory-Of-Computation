@@ -104,19 +104,17 @@ def semantic_analysis(parsed_code):
                 variable_name = statement[1]
                 expression = statement[2]
 
-                # Check if the variable is already declared
-                if variable_name in symbol_table:
-                    print(f"Semantic Error: Variable '{variable_name}' redeclaration.")
-                    return False
-
                 # Perform type checking for assignment
                 if isinstance(expression, tuple):
                     operator, operand1, operand2 = expression
                     if operator in ('+', '-', '*', '/'):
                         # Type check for arithmetic operations
                         if not (isinstance(operand1, int) and isinstance(operand2, int)):
-                            print("Semantic Error: Arithmetic operations require integer operands.")
-                            return False
+                            if operand1 and operand2 in symbol_table:
+                                pass
+                            else:
+                                print("Semantic Error: Arithmetic operations require integer operands.")
+                                return False
                     elif operator == '=':
                         # Type check for assignment
                         if not isinstance(operand2, (int, str)):
@@ -155,7 +153,6 @@ def semantic_analysis(parsed_code):
                     if not isinstance(statement[1][1][1], int):
                         print(f"Semantic Error: Range '{statement[1][1][1]}' not of type int.")
                         return False
-
 
             elif statement[0][0] == "if":
                 condition = statement[0][1]

@@ -1,10 +1,16 @@
 from Lexer import tokenize
+from optimizer import  eliminate_common_subexpressions
 from parser import parse
 
 if __name__ == "__main__":
     code = """
-    for x in range(3):
-    print("test")
+    b = 2
+    c = 3
+    d = 4
+    a = b + c
+    b = a - d
+    c = b + c
+    d = a - d
       
     """
 
@@ -15,5 +21,7 @@ if __name__ == "__main__":
         parsed_code = parse(code)
 
         if parsed_code:
-            print("Parsed code:", parsed_code)
+            print(parsed_code)
+            optimized_code = eliminate_common_subexpressions(parsed_code)
+            print("Optimized Code:", optimized_code)
 

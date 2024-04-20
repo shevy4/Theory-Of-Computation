@@ -29,10 +29,11 @@ import numpy as np
 
 if __name__ == "__main__":
     code = """
-    a = 1
-    x = a
-    b = 2 + x
-    d = x + b
+
+    a = 1 + 2
+    b = 2
+    c = 1 + 2
+    d = 3
       
     """
     tp.banner('Code Optimization using Finite Automata')
@@ -56,6 +57,7 @@ if __name__ == "__main__":
             sleep(1)
         for _ in trange(len(tokens), desc="Parsing"):
             sleep(.2)
+
         print("parsed code", parsed_code)
         sleep(1)
 
@@ -63,6 +65,7 @@ if __name__ == "__main__":
         optimized_code = eliminate_common_subexpressions(parsed_code)
         for _ in trange(len(tokens), desc="Optimizing Subexpressions"):
             sleep(.2)
+
         print("Code after Subexpression Elimination:", optimized_code)
         sleep(1)
 
@@ -70,6 +73,7 @@ if __name__ == "__main__":
         optimized_code = eliminate_dead_code(parsed_code)
         for _ in trange(len(tokens), desc="Burying Dead Code"):
             sleep(.3)
+
         print("Code after Dead Code Elimination:", optimized_code)
         sleep(1)
 
@@ -77,6 +81,7 @@ if __name__ == "__main__":
         optimized_code = fold_constants(parsed_code)
         for _ in trange(len(tokens), desc="Folding Constants"):
             sleep(.2)
+
         print("Code after Constant Folding:", optimized_code)
         sleep(1)
 
@@ -84,5 +89,6 @@ if __name__ == "__main__":
         optimized_code = propagate_copies(parsed_code)
         for _ in trange(len(tokens), desc="Copy & Pasting"):
             sleep(.2)
+
         print("Code after Copy Propagation:", optimized_code)
         sleep(1)

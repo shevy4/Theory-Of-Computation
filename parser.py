@@ -113,7 +113,7 @@ def semantic_analysis(parsed_code):
                                 pass
                             else:
                                 print("Semantic Error: Arithmetic operations require integer operands.")
-                                return False
+                                pass
                     elif operator == '=':
                         # Type check for assignment
                         if not isinstance(operand2, (int, str)):

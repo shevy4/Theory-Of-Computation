@@ -108,7 +108,7 @@ def propagate_copies(parsed_code):
 
             if isinstance(expression, tuple):
                 new_expr = replace_variables(expression, replacements)
-                new_code.append((operation[0],target_var, new_expr))
+                new_code.append((operation[0], target_var, new_expr))
 
             else:
                 new_code.append(operation)

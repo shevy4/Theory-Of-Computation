@@ -33,7 +33,8 @@ and the generation of an optimized intermediate code.
 
 ## Screenshots
 
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+![Screenshot (3)](https://github.com/shevy4/Theory-Of-Computation/assets/61606455/8e58b2e5-4f21-4378-ab96-f9342c9b39c9)
+
 
 
 ## Authors
